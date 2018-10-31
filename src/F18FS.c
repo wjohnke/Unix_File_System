@@ -4,7 +4,7 @@
 #include "F18FS.h"
 
 // you can add more library functions for convenience
-// remember to uncomment the tests for corresponding milestones
+// remember to uncomment the tests for corresponding milestones. THIS IS IMPORTANT!
 // remember to add pseudo-code for the next milestone
 
 

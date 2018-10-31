@@ -77,7 +77,31 @@ TEST(a_tests, format_mount_unmount) {
     
 }
 
-
+/*
+int fs_create(S17FS *const fs, const char *const fname, const ftype_t ftype);
+    1. Normal, file, in root
+    2. Normal, directory, in root
+    3. Normal, file, not in root
+    4. Normal, directory, not in root
+    5. Error, NULL fs
+    6. Error, NULL fname
+    7. Error, empty fname
+    8. Error, bad type
+    9. Error, path does not exist
+    10. Error, Root clobber
+    11. Error, already exists
+    12. Error, file exists
+    13. Error, part of path not directory
+    14. Error, path terminal not directory
+    15. Error, path string has no leading slash
+    16. Error, path has trailing slash (no name for desired file)
+    17. Error, bad path, path part too long
+    18. Error, bad path, desired filename too long
+    19. Error, directory full.
+    20. Error, out of inodes.
+    21. Error, out of data blocks & file is directory (requires functional write)
+*/
+/*
 TEST(b_tests, file_creation_one) {
     vector<const char *> filenames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -237,6 +261,7 @@ TEST(b_tests, file_creation_two) {
     // ... Can't really test 21 yet.
     score += 5;
 }
+*/
 /*
     int fs_open(F18FS *fs, const char *path)
     1. Normal, file at root
@@ -257,6 +282,7 @@ TEST(b_tests, file_creation_two) {
     6. Error, invalid fd, positive, out of bounds
     7. Error, invaid fs, negative
 */
+/*
 TEST(c_tests, open_close_file) {
     vector<const char *> filenames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -354,6 +380,7 @@ TEST(c_tests, open_close_file) {
     fs_unmount(fs);
     score += 20;
 }
+*/
 /*
     int fs_get_dir(const F18FS *const fs, const char *const fname, dir_rec_t *const records)
     1. Normal, root I guess?
@@ -364,6 +391,7 @@ TEST(c_tests, open_close_file) {
     6. Error, NULL fs
     7. Error, not a directory
 */
+/*
 TEST(f_tests, get_dir) {
     vector<const char *> fnames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -421,6 +449,7 @@ TEST(f_tests, get_dir) {
     fs_unmount(fs);
     score += 10;
 }
+*/
 /*
     ssize_t fs_write(F18FS *fs, int fd, const void *src, size_t nbyte);
     1. Normal, 0 size to < 1 block
@@ -437,6 +466,7 @@ TEST(f_tests, get_dir) {
     12. Error, nbyte 0 (not an error...? Bad parameters? Hmm.)
     13. Error, bad fd
 */
+/*
 TEST(d_tests, write_file_simple) {
     vector<const char *> fnames{"/file_a", "/file_b", "/file_c", "/file_d"};
     const char *test_fname = "d_tests_normal.F18FS";
@@ -599,6 +629,7 @@ TEST(d_tests, write_file_fill) {
     fs_unmount(fs);
     score += 15;
 }
+*/
 /* 0-33 34-65519 65520-65535
     int fs_remove(F18FS *fs, const char *path);
     1. Normal, file at root
@@ -612,6 +643,7 @@ TEST(d_tests, write_file_fill) {
     9. Error, NULL fname
     10. Error, Empty fname (same as file does not exist?)
 */
+/*
 TEST(e_tests, remove_file) {
     vector<const char *> b_fnames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -661,7 +693,7 @@ TEST(e_tests, remove_file) {
     fs_unmount(fs);
     score += 15;
 }
-
+*/
 /*
     off_t fs_seek(F18FS *fs, int fd, off_t offset, seek_t whence)
     1. Normal, wherever, really - make sure it doesn't change a second fd to the file
@@ -671,6 +703,7 @@ TEST(e_tests, remove_file) {
     5. Error, fd invalid
     6. Error, whence not a valid value
 */
+/*
 TEST(g_tests, seek) {
     vector<const char *> fnames{"/file_a", "/file_b", "/file_c", "/file_d"};
     const char *test_fname = "g_tests.F18FS";
@@ -710,6 +743,7 @@ TEST(g_tests, seek) {
     fs_unmount(fs);
     score += 13;
 }
+*/
 /*
     ssize_t fs_read(F18FS *fs, int fd, void *dst, size_t nbyte);
     1. Normal, begin to < 1 block
@@ -724,7 +758,7 @@ TEST(g_tests, seek) {
     10. Normal, nbyte 0
     11. Normal, at EOF
 */
-
+/*
 TEST(h_tests, read) {
     vector<const char *> fnames{"/file_a", "/file_b", "/file_c", "/file_d"};
     const char *test_fname = "g_tests.F18FS";
@@ -800,7 +834,7 @@ TEST(h_tests, read) {
     fs_unmount(fs);
     score += 20;
 }
-
+*/
 #if GRAD_TESTS
 /*
     int fs_move(F18FS *fs, const char *src, const char *dst);
@@ -819,7 +853,7 @@ TEST(h_tests, read) {
     13. Error, dst root?
     14. Error, Directory into itself
 */
-
+/*
 TEST(i_tests, move) {
     vector<const char *> fnames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -844,7 +878,6 @@ TEST(i_tests, move) {
     record_results = fs_get_dir(fs, fnames[1]);
     ASSERT_NE(record_results, nullptr);
     ASSERT_TRUE(find_in_directory(record_results, "with_file"));
-//    ASSERT_TRUE(find_in_directory(record_results, "new_location"));
     ASSERT_EQ(dyn_array_size(record_results), 1);
     dyn_array_destroy(record_results);
     int fd = fs_open(fs, fnames[0]);
@@ -937,6 +970,7 @@ TEST(i_tests, move) {
     score += 15;
 
 }
+*/
 /*
     int fs_link(F18FS *fs, const char *src, const char *dst);
 	  Finish this part, get 20 points!
@@ -956,9 +990,11 @@ TEST(i_tests, move) {
     13. Error, dst null
     14. Error, dst root
 */
-/*TEST(j_tests, link) {
+/*
+TEST(j_tests, link) {
     
-}*/
+}
+*/
 #endif
 
 int main(int argc, char **argv) {
