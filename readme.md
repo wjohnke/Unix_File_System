@@ -9,3 +9,5 @@ Due: Monday, 11/19 11:59 PM
 
 Milestone 3: Data
 Due: Monday, 12/3 11:59 PM
+
+An implementation for Milestone 1 is released.

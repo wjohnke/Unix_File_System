@@ -121,6 +121,49 @@ block_store_t *block_store_deserialize(const char *const filename);
 size_t block_store_serialize(const block_store_t *const bs, const char *const filename);
 
 
+/////////////////////////////////////////////////////////////
+/// some added library functions for this implementation  ///
+/////////////////////////////////////////////////////////////
+
+// model the inode table as a blockstore and create a blockstore_t object for it.
+block_store_t *block_store_inode_create(void *const BM_start_pos, void *const data_start_pos);
+
+// model the file descriptor table as a blockstore and create a block_t object for it.
+block_store_t *block_store_fd_create();
+
+// return a pointer to the Data of a storage device, NULL on error
+uint8_t * block_store_Data_location(block_store_t *const bs);
+
+// destroy the blockstore for inode table
+void block_store_inode_destroy(block_store_t *const bs);
+
+// destroy the blockstore for the file descriptor table
+void block_store_fd_destroy(block_store_t *const bs);
+
+// search for a free block, marks it as in use, and returns the block's id.
+// Used for the blockstores of the inode table and file descriptor table.
+size_t block_store_sub_allocate(block_store_t *const bs);
+
+// test if a certain block is available.
+// Used for the blockstores of the inode table and file descriptor table.
+bool block_store_sub_test(block_store_t *const bs, const size_t block_id);
+
+// release usage of a certain block.
+// Used for the blockstores of the inode table and file descriptor table.
+void block_store_sub_release(block_store_t *const bs, const size_t block_id);
+
+// read out the inode object in block_id to buffer
+size_t block_store_inode_read(const block_store_t *const bs, const size_t block_id, void *buffer);
+
+// read out the file descriptor object in block_id to buffer
+size_t block_store_fd_read(const block_store_t *const bs, const size_t block_id, void *buffer);
+
+// write the inode object in block_id from buffer
+size_t block_store_inode_write(block_store_t *const bs, const size_t block_id, const void *buffer);
+
+// write the file descriptor object in block_id from buffer
+size_t block_store_fd_write(block_store_t *const bs, const size_t block_id, const void *buffer);
+
 #ifdef __cplusplus
 }
 #endif

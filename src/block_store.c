@@ -282,7 +282,134 @@ size_t block_store_serialize(const block_store_t *const bs, const char *const fi
 }
 
 
+/// implementation of the newly added library functions
+block_store_t *block_store_inode_create(void *const BM_start_pos, void *const data_start_pos)
+{
+	block_store_t* BS = (block_store_t*)malloc(sizeof(block_store_t));
+	if(BS != NULL)	// pointer of the new block store has successfully created
+	{
+		BS->fbm = bitmap_overlay(256, BM_start_pos);
+		BS->data_blocks = data_start_pos;		
+		return BS;
+	}
+	return NULL;
+}
 
+
+
+block_store_t *block_store_fd_create()
+{
+	block_store_t* BS = (block_store_t*)malloc(sizeof(block_store_t));
+	if(BS != NULL)	// pointer of the new block store has successfully created
+	{
+		BS->data_blocks = calloc(256, 6);	// create space for the blocks
+		BS->fbm = bitmap_create(256);
+		return BS;
+	}
+	return NULL;
+}
+///
+/// This returns pointer to start of the Data of a block store
+/// \param bs BS device
+/// \return Pointer to a Data of a storage device, NULL on error
+uint8_t * block_store_Data_location(block_store_t *const bs)
+{
+	if(bs != NULL)
+	{
+		return bs->data_blocks;
+	}
+	return NULL;
+}
+
+void block_store_inode_destroy(block_store_t *const bs)
+{
+	if (bs)
+	{
+		bitmap_destroy(bs->fbm);		// since fbm and data_blocks are in the same memory space, we cannot free the space twice!
+		free(bs);
+	}
+}
+
+
+void block_store_fd_destroy(block_store_t *const bs)
+{
+	if (bs)
+	{
+		bitmap_destroy(bs->fbm);		// since fbm and data_blocks are in the same memory space, we cannot free the space twice!
+		free(bs->data_blocks);
+		free(bs);
+	}
+}
+size_t block_store_sub_allocate(block_store_t *const bs) {
+    if (bs == NULL) {
+        return SIZE_MAX; // return SIZE_MAX if the input is a null pointer
+    }
+    //-- find first zero in the bitmap
+    size_t id;
+    id = bitmap_ffz(bs->fbm); // index of the first free block
+    if (id == SIZE_MAX) {
+        return SIZE_MAX; // return SIZE_MAX since the last block is not available for storing data
+    }
+    bitmap_set(bs->fbm, id); // mark it as in use
+//	printf("fd_id = 0 is used or not?: %d\n", bitmap_test(bs->fbm, id));
+    return id;
+}
+bool block_store_sub_test(block_store_t *const bs, const size_t block_id) {
+    if (block_id > 255 || bs == NULL) {
+        return false;
+    }
+    bool blockUsed = 0;
+    blockUsed = bitmap_test(bs->fbm, block_id); // check if the block is in use
+    if (blockUsed) { // if this block is already in use
+        //bitmap_destroy(bs->fbm); // destruct and destroy bitmap object
+        return true;
+    }
+	return false;
+}
+void block_store_sub_release(block_store_t *const bs, const size_t block_id) {
+    if (block_id < 256 && bs != NULL) {
+        bool success = 0;
+        success = bitmap_test(bs->fbm, block_id); // check if the block is in use
+        if (success) {
+            bitmap_reset(bs->fbm, block_id); // clear requested bit in bitmap
+    //        bitmap_destroy(bs->fbm); // destruct and destroy bitmap object
+        }
+    }
+    //// Some error message here ////
+}
+size_t block_store_inode_read(const block_store_t *const bs, const size_t block_id, void *buffer) {
+    if (bs && buffer && block_id <= 255) {
+        memcpy(buffer, bs->data_blocks+block_id * 64, 64);
+        return 64;
+    }
+    return 0;
+}
+
+
+size_t block_store_fd_read(const block_store_t *const bs, const size_t block_id, void *buffer) {
+    if (bs && buffer && block_id <= 255) {
+        memcpy(buffer, bs->data_blocks+block_id * 6, 6);
+        return 6;
+    }
+    return 0;
+}
+size_t block_store_inode_write(block_store_t *const bs, const size_t block_id, const void *buffer) {
+    if (bs && buffer && block_id < 256) {
+        memcpy(bs->data_blocks+block_id*64, buffer, 64);
+        return 64;
+    }
+    return 0;
+}
+
+
+
+size_t block_store_fd_write(block_store_t *const bs, const size_t block_id, const void *buffer) {
+    if (bs && buffer && block_id < 256) {
+        memcpy(bs->data_blocks+block_id*6, buffer, 6);
+        return 6;
+    }
+    return 0;
+}
 
 
 
