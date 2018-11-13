@@ -81,6 +81,56 @@ int fs_unmount(F18FS_t *fs){
 }
 
 
+/*
+----------------------
+PseudoCode for next milestone:
+
+int fs_create(F18FS_t *fs, const char *path, file_t type){
+	- if not(check parameters for null and invalid values){
+		- check path and traverse across tree of directories to get
+		to correct new file location. Make sure each directory exists,
+		otherwise return 0
+		- When valid directory is reached, allocate space for file,
+		create an inode and add to inode_table, set inode_num in
+		created file = inode_table size. Traverse back to parent directory
+		and set pointer to new file in directory's inode.
+		Return 0;
+	}
+	return -1
+}
+
+
+int fs_open(F18FS_t *fs, const char *path){
+	- Check parameters for validity & null
+	- Iterate through directory path given, go through inodes,
+	find last file given, make sure it is a file and not a directory
+	- Set new file descriptor.filename = path, and the position = 0.
+	- Add new file descriptor to FileSystem's overarching file_descriptor array
+	- Return file descriptor or -1 on failure of any above cases	
+}
+
+int fs_close(F18FS_t *fs, int fd){
+	- Basic error checking to make sure fd is valid num & fs exists
+	- Checks file descriptor given to make sure it exists in fs's
+	file descriptor list.
+	- Removes file descriptor from fs, returns 0 on success or -1 on failure
+	of any above cases.
+	
+}
+
+dyn_array_t *fs_get_dir(F18FS_t *fs, const char *path){
+	- Error check fs and path for null & validity.
+	- Parse through path and find directory by inode.
+	- Call dyn_array_create(15, sizeof(directoryFile), NULL)
+	- Store in dyn_array that was returned, the filenames of
+	every entry in the given path's directory, 15 entries max.
+	- Return back this array w/ NULL on error.
+}
+
+
+*/
+
+
 
 
 
