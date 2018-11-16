@@ -19,7 +19,7 @@ typedef struct F18FS F18FS_t;
 typedef enum { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } seek_t;
 typedef enum { FS_REGULAR, FS_DIRECTORY } file_t;
 
-#define FS_FNAME_MAX (32)
+#define FS_FNAME_MAX (64)
 // INCLUDING null terminator
 
 typedef struct {
