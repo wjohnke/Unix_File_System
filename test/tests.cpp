@@ -101,7 +101,7 @@ int fs_create(S17FS *const fs, const char *const fname, const ftype_t ftype);
     20. Error, out of inodes.
     21. Error, out of data blocks & file is directory (requires functional write)
 */
-/*
+
 TEST(b_tests, file_creation_one) {
     vector<const char *> filenames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -261,7 +261,7 @@ TEST(b_tests, file_creation_two) {
     // ... Can't really test 21 yet.
     score += 5;
 }
-*/
+
 /*
     int fs_open(F18FS *fs, const char *path)
     1. Normal, file at root
@@ -282,7 +282,7 @@ TEST(b_tests, file_creation_two) {
     6. Error, invalid fd, positive, out of bounds
     7. Error, invaid fs, negative
 */
-/*
+
 TEST(c_tests, open_close_file) {
     vector<const char *> filenames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -380,7 +380,7 @@ TEST(c_tests, open_close_file) {
     fs_unmount(fs);
     score += 20;
 }
-*/
+
 /*
     int fs_get_dir(const F18FS *const fs, const char *const fname, dir_rec_t *const records)
     1. Normal, root I guess?
@@ -391,7 +391,7 @@ TEST(c_tests, open_close_file) {
     6. Error, NULL fs
     7. Error, not a directory
 */
-/*
+
 TEST(f_tests, get_dir) {
     vector<const char *> fnames{
         "/file", "/folder", "/folder/with_file", "/folder/with_folder", "/DOESNOTEXIST", "/file/BAD_REQUEST",
@@ -449,7 +449,7 @@ TEST(f_tests, get_dir) {
     fs_unmount(fs);
     score += 10;
 }
-*/
+
 /*
     ssize_t fs_write(F18FS *fs, int fd, const void *src, size_t nbyte);
     1. Normal, 0 size to < 1 block
@@ -552,6 +552,8 @@ TEST(d_tests, write_file_simple) {
     fs_unmount(fs);
     
 }
+*/
+/*
 TEST(d_tests, write_file_fill) {
     // Still gotta test write 6,7,8,9
     vector<const char *> fnames{"/file_a", "/file_b", "/file_c", "/file_d"};

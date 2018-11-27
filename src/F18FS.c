@@ -2,6 +2,7 @@
 #include "bitmap.h"
 #include "block_store.h"
 #include "F18FS.h"
+#include <string.h>
 
 // you can add more library functions for convenience
 // remember to uncomment the tests for corresponding milestones. THIS IS IMPORTANT!
@@ -159,6 +160,56 @@ int fs_unmount(F18FS_t *fs)
 	return -1;
 }
 
+int fs_create(F18FS_t *fs, const char *path, file_t type){
+	
+	if(path!=NULL && strlen(path)!=0 && fs!=NULL && path[0]=='/' && (type==FS_REGULAR || type==FS_DIRECTORY)){
+		/*Check if path exists*/
+		//directory = fs_get_dir(fs, path);
+		block_store_inode_write(fs->BlockStore_inode, block_store_sub_allocate(fs->BlockStore_fd), NULL);
+		return -1;
+	}
+	return -1;
+}
+
+
+int fs_open(F18FS_t *fs, const char *path){
+	if(path!=NULL && strlen(path)!=0 && fs!=NULL && path[0]=='/'){
+		
+		return -1;
+	}
+	return -1;
+}
+
+int fs_close(F18FS_t *fs, int fd){
+	if(fs!=NULL && fd>=0){
+		return -1;
+	}
+	return -1;
+}
+
+
+dyn_array_t *fs_get_dir(F18FS_t *fs, const char *path){
+	//cur_dir = "";
+	//last_dir = "";
+	
+	
+	if(fs!=NULL && path!=NULL){
+		/*
+		cur_dir = strtok(path, "/");
+		while(cur_dir!=NULL){
+			if(cur_dir=="\0"){
+				break;
+			}
+			else{
+				last_dir = cur_dir;
+			}
+			//cur_dir = strtok(NULL, "/");
+		}
+		*/
+	}
+	
+	return NULL;
+}
 
 
 
