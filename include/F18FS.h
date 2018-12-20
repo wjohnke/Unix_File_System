@@ -14,6 +14,7 @@
 typedef struct inode inode_t;
 typedef struct fileDescriptor fileDescriptor_t;
 typedef struct directoryFile directoryFile_t;
+typedef struct directoryBlock directoryBlock_t;
 
 typedef struct F18FS F18FS_t;
 typedef enum { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } seek_t;

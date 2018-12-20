@@ -366,6 +366,21 @@ bool block_store_sub_test(block_store_t *const bs, const size_t block_id) {
     }
 	return false;
 }
+
+bool block_store_test(block_store_t *const bs, const size_t block_id) {
+    if (block_id >= BLOCK_STORE_AVAIL_BLOCKS || bs == NULL) {
+        return false;
+    }
+    bool blockUsed = 0;
+    blockUsed = bitmap_test(bs->fbm, block_id); // check if the block is in use
+    if (blockUsed) { // if this block is already in use
+        return true;
+    }
+    else { // if this block is not in use
+        return false;
+    }
+}
+
 void block_store_sub_release(block_store_t *const bs, const size_t block_id) {
     if (block_id < 256 && bs != NULL) {
         bool success = 0;
@@ -393,6 +408,15 @@ size_t block_store_fd_read(const block_store_t *const bs, const size_t block_id,
     }
     return 0;
 }
+
+size_t block_store_n_read(const block_store_t *const bs, const size_t block_id, size_t offset, void *buffer, size_t bytes) {
+    if (bs && buffer && block_id <= BLOCK_STORE_AVAIL_BLOCKS && offset < BLOCK_SIZE_BYTES && bytes + offset <= BLOCK_SIZE_BYTES) {
+        memcpy(buffer, bs->data_blocks+block_id*BLOCK_SIZE_BYTES+offset, bytes);
+        return bytes;
+    }
+    return 0;
+}
+
 size_t block_store_inode_write(block_store_t *const bs, const size_t block_id, const void *buffer) {
     if (bs && buffer && block_id < 256) {
         memcpy(bs->data_blocks+block_id*64, buffer, 64);
@@ -401,6 +425,13 @@ size_t block_store_inode_write(block_store_t *const bs, const size_t block_id, c
     return 0;
 }
 
+size_t block_store_n_write(block_store_t *const bs, const size_t block_id, size_t offset, const void *buffer, size_t bytes){
+    if (bs && buffer && block_id <= BLOCK_STORE_AVAIL_BLOCKS && offset < 512 && (offset + bytes) <= BLOCK_SIZE_BYTES) {
+        memcpy(bs->data_blocks+block_id*BLOCK_SIZE_BYTES+offset, buffer, bytes);
+        return bytes;
+    }
+    return 0;
+}
 
 
 size_t block_store_fd_write(block_store_t *const bs, const size_t block_id, const void *buffer) {

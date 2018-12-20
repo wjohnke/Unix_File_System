@@ -87,6 +87,8 @@ size_t block_store_get_free_blocks(const block_store_t *const bs);
 ///
 size_t block_store_get_total_blocks();
 
+bool block_store_test(block_store_t *const bs, const size_t block_id);
+
 ///
 /// Reads data from the specified block and writes it to the designated buffer
 /// \param bs BS device
@@ -96,6 +98,8 @@ size_t block_store_get_total_blocks();
 ///
 size_t block_store_read(const block_store_t *const bs, const size_t block_id, void *buffer);
 
+size_t block_store_n_read(const block_store_t *const bs, const size_t block_id, size_t offset, void *buffer, size_t bytes);
+
 ///
 /// Reads data from the specified buffer and writes it to the designated block
 /// \param bs BS device
@@ -104,6 +108,9 @@ size_t block_store_read(const block_store_t *const bs, const size_t block_id, vo
 /// \return Number of bytes written, 0 on error
 ///
 size_t block_store_write(block_store_t *const bs, const size_t block_id, const void *buffer);
+
+size_t block_store_n_write(block_store_t *const bs, const size_t block_id, size_t offset, const void *buffer, size_t bytes);
+
 
 ///
 /// Imports BS device from the given file - for grads/bonus
